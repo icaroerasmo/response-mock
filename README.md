@@ -50,3 +50,5 @@ ps.: Just run response-mock.dockerfile present in root directory if this setting
 Just use a http client such as Postman, Imsonmnia, your browser or something else to send the request as below:
 
 &lt;hostname&gt;?body=%7B%22description%22%3A%20%22validation%20failed%22%7D&httpStatus=400&headers=header1%3Dvalue1%3Bheader2%3Dvalue2%3Bheader3%3Dvalue3&produces=application%2Fjson
+
+Don't forget to url encode values.
