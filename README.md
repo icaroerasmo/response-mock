@@ -5,23 +5,24 @@ Simple but useful mock application. Just send a request with all values you want
 #### Getting started
 ###### Local
 ```
-mvn clean package
+mvnw clean package
 java -Dserver.port=8081 -jar target/response-mock-<version>.jar
 ```
 ###### Docker
 
 If you want to run it in docker, simply do:
+
 ```
-mvn clean package
-```
-and then:
-```
-FROM amazoncorretto:17
-ENV portNumber 8080
-WORKDIR app
-COPY target/response-mock-*.jar ./response-mock.jar
+FROM maven:3.8.6-openjdk-18-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+FROM openjdk:17
+ENV portNumber 8082
+COPY --from=build /home/app/target/response-mock-*.jar /usr/local/lib/response-mock.jar
 EXPOSE $portNumber
-ENTRYPOINT [ "java", "-Dserver.port=${portNumber}", "-jar", "response-mock.jar" ]
+ENTRYPOINT [ "java", "-Dserver.port=${portNumber}", "-jar", "/usr/local/lib/response-mock.jar" ] ]
 ```
 
 ps.: Just run response-mock.dockerfile present in root directory if this setting is enough for your purpose.

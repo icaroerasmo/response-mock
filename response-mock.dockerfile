@@ -1,6 +1,10 @@
-FROM amazoncorretto:17
+FROM maven:3.8.6-openjdk-18-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+FROM openjdk:17
 ENV portNumber 8082
-WORKDIR app
-COPY target/response-mock-*.jar ./response-mock.jar
+COPY --from=build /home/app/target/response-mock-*.jar /usr/local/lib/response-mock.jar
 EXPOSE $portNumber
-ENTRYPOINT [ "java", "-Dserver.port=${portNumber}", "-jar", "response-mock.jar" ]
+ENTRYPOINT [ "java", "-Dserver.port=${portNumber}", "-jar", "/usr/local/lib/response-mock.jar" ]
