@@ -1,0 +1,3 @@
+response-mock:
+  cron:
+    cache: 0 0 * * * *
