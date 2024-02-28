@@ -7,11 +7,11 @@ import com.icaroerasmo.responsemock.models.Endpoint;
 
 import java.io.IOException;
 
-public class HttpMethodSerializer extends StdSerializer<Endpoint.Route> {
-    public HttpMethodSerializer() {
+public class RouteSerializer extends StdSerializer<Endpoint.Route> {
+    public RouteSerializer() {
         this(null);
     }
-    public HttpMethodSerializer(Class<Endpoint.Route> t) {
+    public RouteSerializer(Class<Endpoint.Route> t) {
         super(t);
     }
 

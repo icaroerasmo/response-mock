@@ -1,7 +1,7 @@
 package com.icaroerasmo.responsemock.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.icaroerasmo.responsemock.serializers.HttpMethodSerializer;
+import com.icaroerasmo.responsemock.serializers.RouteSerializer;
 import lombok.Data;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ public class Endpoint {
     private UUID uuid;
     private Set<Route> routes;
     @Data
-    @JsonSerialize(using = HttpMethodSerializer.class)
+    @JsonSerialize(using = RouteSerializer.class)
     public static class Route {
         private String body;
         private MediaType produces;
