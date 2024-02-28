@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,10 +30,7 @@ public class RouteService {
 
         mappingValidation(endpoint);
 
-        var _found = savedRoutes.stream().
-                filter(
-                        e -> endpoint.getUuid() != null &&
-                                e.getUuid().equals(endpoint.getUuid())).findAny();
+        var _found = get(endpoint.getUuid());
         if(_found.isEmpty()) {
             log.info("New endpoint. Saving: {}", endpoint);
             endpoint.setUuid(UUID.randomUUID());
@@ -63,7 +61,7 @@ public class RouteService {
 
         log.info("Executing route from endpoint {}", foundEndpoint.getUuid());
 
-        final HttpMethod httpMethod =  HttpMethod.valueOf(httpServletRequest.getMethod());
+        final HttpMethod httpMethod = HttpMethod.valueOf(httpServletRequest.getMethod());
         final Endpoint.Route route = foundEndpoint.getRoutes().stream().
                 filter(r -> r.getMethod().equals(httpMethod)).
                 findAny().orElseThrow(() -> new RuntimeException("Route not found"));
@@ -95,5 +93,12 @@ public class RouteService {
                     collect(Collectors.joining(";"));
             throw new RuntimeException(messages);
         }
+    }
+
+    public Optional<Endpoint> get(UUID uuid) {
+        return savedRoutes.stream().
+                filter(
+                        e -> uuid != null &&
+                                e.getUuid().equals(uuid)).findAny();
     }
 }
