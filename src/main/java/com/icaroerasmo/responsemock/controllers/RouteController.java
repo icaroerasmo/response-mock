@@ -32,9 +32,10 @@ public class RouteController {
         return ResponseEntity.ok(routeService.save(endpoint));
     }
 
-    @RequestMapping(path = "/", method = {RequestMethod.GET})
+    @RequestMapping(path = "/{uuid}", method = {RequestMethod.GET})
     public ResponseEntity<Endpoint> get(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(routeService.get(uuid).orElseThrow(() -> new EndpointNotFoundException("Could not find endpoint %s".formatted(uuid))));
+        return ResponseEntity.ok(routeService.
+                get(uuid).orElseThrow(() -> new EndpointNotFoundException("Could not find endpoint %s".formatted(uuid))));
     }
 
     @SneakyThrows

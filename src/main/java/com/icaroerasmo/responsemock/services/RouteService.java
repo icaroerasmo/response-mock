@@ -1,5 +1,6 @@
 package com.icaroerasmo.responsemock.services;
 
+import com.icaroerasmo.responsemock.exceptions.EndpointNotFoundException;
 import com.icaroerasmo.responsemock.models.Endpoint;
 import com.icaroerasmo.responsemock.utils.ParametersUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-//TODO create specialized exceptions to each case
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -24,6 +24,13 @@ public class RouteService {
     private static Set<Endpoint> savedRoutes = new HashSet<>();
 
     private final ResponseGeneratorService responseGeneratorService;
+
+    public Optional<Endpoint> get(UUID uuid) {
+        return savedRoutes.stream().
+                filter(
+                        e -> uuid != null &&
+                                e.getUuid().equals(uuid)).findAny();
+    }
 
     public Endpoint save(final Endpoint endpoint) {
         log.info("Saving endpoint: {}", endpoint);
@@ -53,11 +60,8 @@ public class RouteService {
 
     public void execute(final UUID uuid, final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
 
-        final Endpoint foundEndpoint = savedRoutes.stream().
-                filter(
-                        e -> uuid != null &&
-                                e.getUuid().equals(uuid)).findAny().
-                orElseThrow(() -> new RuntimeException("Endpoint not found"));
+        final Endpoint foundEndpoint = get(uuid).
+                orElseThrow(() -> new EndpointNotFoundException("Could not find endpoint %s".formatted(uuid)));
 
         log.info("Executing route from endpoint {}", foundEndpoint.getUuid());
 
@@ -93,12 +97,5 @@ public class RouteService {
                     collect(Collectors.joining(";"));
             throw new RuntimeException(messages);
         }
-    }
-
-    public Optional<Endpoint> get(UUID uuid) {
-        return savedRoutes.stream().
-                filter(
-                        e -> uuid != null &&
-                                e.getUuid().equals(uuid)).findAny();
     }
 }

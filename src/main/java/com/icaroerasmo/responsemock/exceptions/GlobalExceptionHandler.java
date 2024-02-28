@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Log4j2
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MockResponseException.class})
-    public ResponseEntity<ErrorDTO> handleMockResponseException(MockResponseException mockResponseException) {
-        log.error("Global exception handler: ", mockResponseException);
+    @ExceptionHandler({MockResponseException.class, EndpointNotFoundException.class})
+    public ResponseEntity<ErrorDTO> handleAppExceptions(RuntimeException exception) {
+        log.error("Global exception handler: ", exception);
         final ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setDescription("Mock response service could not process request. Reason: %s.".formatted(mockResponseException.getMessage()));
+        errorDTO.setDescription("Mock response service could not process request. Reason: %s.".formatted(exception.getMessage()));
         return ResponseEntity.badRequest().body(errorDTO);
     }
 }
