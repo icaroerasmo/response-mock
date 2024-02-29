@@ -1,8 +1,7 @@
 package com.icaroerasmo.responsemock.services;
 
-import com.icaroerasmo.responsemock.exceptions.EndpointNotFoundException;
+import com.icaroerasmo.responsemock.exceptions.MockResponseException;
 import com.icaroerasmo.responsemock.models.Endpoint;
-import com.icaroerasmo.responsemock.utils.ParametersUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +60,7 @@ public class RouteService {
     public void execute(final UUID uuid, final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
 
         final Endpoint foundEndpoint = get(uuid).
-                orElseThrow(() -> new EndpointNotFoundException("Could not find endpoint %s".formatted(uuid)));
+                orElseThrow(() -> new MockResponseException("Could not find endpoint %s".formatted(uuid)));
 
         log.info("Executing route from endpoint {}", foundEndpoint.getUuid());
 

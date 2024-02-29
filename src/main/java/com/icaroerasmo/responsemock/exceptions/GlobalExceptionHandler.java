@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Log4j2
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MockResponseException.class, EndpointNotFoundException.class})
+    @ExceptionHandler({MockResponseException.class})
     public ResponseEntity<ErrorDTO> handleAppExceptions(RuntimeException exception) {
         log.error("Global exception handler: ", exception);
         final ErrorDTO errorDTO = new ErrorDTO();
