@@ -69,7 +69,7 @@ public class ResponseGeneratorService {
         log.info("Request ID |{}|: Content Type: [{}]", requestId, produces);
         log.info("Request ID |{}|: Http Status: [{}]", requestId, httpStatus);
         log.info("Request ID |{}|: Headers: [{}]", requestId, headers);
-        log.info("Request ID |{}|: Delay in millis: [{}]", requestId, delay.toMillis());
+        log.info("Request ID |{}|: Delay in millis: [{}]", requestId, Optional.ofNullable(delay).isPresent() ? delay.toMillis() : null);
 
         if(Optional.ofNullable(delay).isPresent()) {
             log.info("Request ID |{}|: Executing {} delay in milliseconds", requestId, delay.toMillis());
