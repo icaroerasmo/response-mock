@@ -4,11 +4,18 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.icaroerasmo.responsemock.models.Endpoint;
+import com.icaroerasmo.responsemock.utils.TimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
-
+@Component
 public class RouteSerializer extends StdSerializer<Endpoint.Route> {
+
+    @Autowired
+    private TimeUtil timeUtil;
+
     public RouteSerializer() {
         this(null);
     }
@@ -24,6 +31,9 @@ public class RouteSerializer extends StdSerializer<Endpoint.Route> {
         }
         if(Optional.ofNullable(route.getProduces()).isPresent()) {
             jsonGenerator.writeStringField("produces", route.getProduces().toString());
+        }
+        if(Optional.ofNullable(route.getDelay()).isPresent()) {
+            jsonGenerator.writeStringField("delay", timeUtil.durationToString(route.getDelay()));
         }
         if(Optional.ofNullable(route.getHeaders()).isPresent()) {
             jsonGenerator.writeFieldName("headers");

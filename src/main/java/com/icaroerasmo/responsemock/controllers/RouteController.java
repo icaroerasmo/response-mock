@@ -2,7 +2,6 @@ package com.icaroerasmo.responsemock.controllers;
 
 import com.icaroerasmo.responsemock.exceptions.MockResponseException;
 import com.icaroerasmo.responsemock.models.Endpoint;
-import com.icaroerasmo.responsemock.services.ResponseGeneratorService;
 import com.icaroerasmo.responsemock.services.RouteService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,6 @@ import java.util.*;
 public class RouteController {
 
     private final RouteService routeService;
-    private final ResponseGeneratorService responseGeneratorService;
 
     @RequestMapping(path = "/", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<Endpoint> save(@RequestBody Endpoint endpoint) {
@@ -30,8 +28,7 @@ public class RouteController {
 
     @RequestMapping(path = "/{uuid}", method = {RequestMethod.GET})
     public ResponseEntity<Endpoint> get(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(routeService.
-                get(uuid).orElseThrow(() -> new MockResponseException("Could not find endpoint %s".formatted(uuid))));
+        return ResponseEntity.ok(routeService.get(uuid));
     }
 
     @SneakyThrows
@@ -39,7 +36,7 @@ public class RouteController {
     public void process(final HttpServletRequest request, final HttpServletResponse response) {
         final UUID uuid = UUID.randomUUID();
         log.info("Initializing request. ID: |{}|", uuid);
-        responseGeneratorService.generateResponse(uuid, request, response);
+        routeService.runtimeRoute(uuid, request, response);
         log.info("Finishing request. ID: |{}|", uuid);
     }
 
