@@ -7,4 +7,4 @@ FROM openjdk:17
 ENV portNumber 8082
 COPY --from=build /home/app/target/response-mock-*.jar /usr/local/lib/response-mock.jar
 EXPOSE $portNumber
-ENTRYPOINT [ "java", "-Dserver.port=${portNumber}", "-jar", "/usr/local/lib/response-mock.jar" ]
+ENTRYPOINT [ "java", "-Dspring.config.additional-location=optional:/home/properties/application.yaml", "-Dserver.port=${portNumber}", "-jar", "/usr/local/lib/response-mock.jar" ]

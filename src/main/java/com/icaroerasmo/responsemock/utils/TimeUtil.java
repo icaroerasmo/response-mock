@@ -26,7 +26,6 @@ public class TimeUtil {
             final TimeUnit interval = toTimeUnit(m.group(2));
             final long l = interval.toMillis(duration);
             totalMillis = totalMillis + l;
-            System.out.format("TimeUnit.%s.toMillis(%s) = %d\n", interval.name(), duration, l);
         }
         return Duration.of(totalMillis, ChronoUnit.MILLIS);
     }
