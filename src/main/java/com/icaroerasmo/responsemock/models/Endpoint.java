@@ -9,19 +9,20 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
-public class Endpoint {
+public class Endpoint implements Serializable {
     private UUID uuid;
     private Set<Route> routes;
     @Data
     @JsonSerialize(using = RouteSerializer.class)
     @JsonDeserialize(using = RouteDeserializer.class)
-    public static class Route {
+    public static class Route implements Serializable{
         private String body;
         private MediaType produces;
         private Duration delay;

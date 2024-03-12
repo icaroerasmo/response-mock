@@ -2,6 +2,7 @@ package com.icaroerasmo.responsemock.services;
 
 import com.icaroerasmo.responsemock.exceptions.MockResponseException;
 import com.icaroerasmo.responsemock.models.Endpoint;
+import com.icaroerasmo.responsemock.repositories.RedisRepository;
 import com.icaroerasmo.responsemock.utils.ParametersUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RouteService {
 
-    private static Set<Endpoint> savedRoutes = new HashSet<>();
-
+    private final RedisRepository redisRepository;
     private final ParametersUtil parametersUtil;
     private final ResponseGeneratorService responseGeneratorService;
 
@@ -44,7 +44,7 @@ public class RouteService {
         if(_found.isEmpty()) {
             log.info("New endpoint. Saving: {}", endpoint);
             endpoint.setUuid(UUID.randomUUID());
-            savedRoutes.add(endpoint);
+            redisRepository.put(endpoint);
             log.info("New endpoint saved: {}", endpoint);
             return endpoint;
         }
@@ -78,18 +78,8 @@ public class RouteService {
         log.info("Processed response for endpoint {} and route {}", foundEndpoint.getUuid(), route);
     }
 
-    @Scheduled(cron = "${response-mock.cron.cache}")
-    public void cleanCache() {
-        log.warn("Cleaning cache!");
-        savedRoutes.clear();
-        log.warn("Cache cleaned!");
-    }
-
     private Optional<Endpoint> findRoute(UUID uuid) {
-        return savedRoutes.stream().
-                filter(
-                        e -> uuid != null &&
-                                e.getUuid().equals(uuid)).findAny();
+        return Optional.ofNullable(redisRepository.get(uuid));
     }
 
     private static void mappingValidation(Endpoint endpoint) {
