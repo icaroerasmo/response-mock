@@ -40,12 +40,20 @@ public class RouteService {
 
         mappingValidation(endpoint);
 
-        var _found = redisRepository.get(endpoint.getUuid());
-        if(_found.isEmpty()) {
-            log.info("New endpoint. Saving: {}", endpoint);
+        if(Optional.ofNullable(endpoint.getUuid()).isEmpty()) {
             endpoint.setUuid(UUID.randomUUID());
+            log.info("New endpoint. Saving: {}", endpoint);
             redisRepository.put(endpoint);
             log.info("New endpoint saved: {}", endpoint);
+            return endpoint;
+        }
+
+        var _found = redisRepository.get(endpoint.getUuid());
+
+        if(_found.isEmpty()) {
+            log.info("Recreating endpoint which doesn't exist anymore. Updating: {}", endpoint);
+            redisRepository.put(endpoint);
+            log.info("Finished update: {}", endpoint);
             return endpoint;
         }
 
@@ -57,7 +65,9 @@ public class RouteService {
                 collect(Collectors.toSet());
         found.getRoutes().removeAll(foundRoutes);
         found.getRoutes().addAll(endpoint.getRoutes());
+        redisRepository.put(found);
         log.info("Finished update: {}", endpoint);
+
         return found;
     }
 

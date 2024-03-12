@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Repository
@@ -25,6 +26,6 @@ public class RedisRepository {
     }
 
     public void put(Endpoint endpoint) {
-        template.opsForValue().set(endpoint.getUuid(), endpoint);
+        template.opsForValue().set(endpoint.getUuid(), endpoint, 60, TimeUnit.MINUTES);
     }
 }

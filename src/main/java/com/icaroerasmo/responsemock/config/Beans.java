@@ -17,14 +17,6 @@ import static org.springframework.data.redis.serializer.RedisSerializationContex
 
 @Configuration
 public class Beans {
-    @Bean
-    public RedisCacheConfiguration defaultCacheConfiguration() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(60))
-                .disableCachingNullValues()
-                .serializeKeysWith(fromSerializer(new GenericToStringSerializer<>(String.class)))
-                .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer()));
-    }
 
     @Bean
     public RedisTemplate<UUID, Endpoint> redisTemplate(RedisConnectionFactory connectionFactory) {
