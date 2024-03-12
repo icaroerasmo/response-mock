@@ -1,22 +1,27 @@
 package com.icaroerasmo.responsemock.repositories;
 
 import com.icaroerasmo.responsemock.models.Endpoint;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
+@Log4j2
 @Repository
 public class RedisRepository {
     @Autowired
     private RedisTemplate<UUID, Endpoint> template;
-    public Endpoint get(UUID uuid) {
+    public Optional<Endpoint> get(UUID uuid) {
+        Endpoint endpoint = null;
         try {
-            return template.opsForValue().get(uuid);
+            endpoint = template.opsForValue().get(uuid);
         } catch (IllegalArgumentException e) {
-            return null;
+            log.info("Endpoint {} not found", uuid);
         }
+        return Optional.ofNullable(endpoint);
     }
 
     public void put(Endpoint endpoint) {

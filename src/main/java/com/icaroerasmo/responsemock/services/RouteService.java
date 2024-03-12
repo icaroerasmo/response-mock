@@ -31,7 +31,7 @@ public class RouteService {
     }
 
     public Endpoint get(UUID uuid) {
-        return findRoute(uuid).orElseThrow(
+        return redisRepository.get(uuid).orElseThrow(
                 () -> new MockResponseException("Could not find endpoint %s".formatted(uuid)));
     }
 
@@ -40,7 +40,7 @@ public class RouteService {
 
         mappingValidation(endpoint);
 
-        var _found = findRoute(endpoint.getUuid());
+        var _found = redisRepository.get(endpoint.getUuid());
         if(_found.isEmpty()) {
             log.info("New endpoint. Saving: {}", endpoint);
             endpoint.setUuid(UUID.randomUUID());
@@ -63,7 +63,7 @@ public class RouteService {
 
     public void execute(final UUID uuid, final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
 
-        final Endpoint foundEndpoint = findRoute(uuid).
+        final Endpoint foundEndpoint = redisRepository.get(uuid).
                 orElseThrow(() -> new MockResponseException("Could not find endpoint %s".formatted(uuid)));
 
         log.info("Executing route from endpoint {}", foundEndpoint.getUuid());
@@ -76,10 +76,6 @@ public class RouteService {
         responseGeneratorService.generateResponse(uuid, route.getHeaders(), route.getStatus(), route.getProduces(), route.getDelay(), route.getBody(), httpServletResponse);
 
         log.info("Processed response for endpoint {} and route {}", foundEndpoint.getUuid(), route);
-    }
-
-    private Optional<Endpoint> findRoute(UUID uuid) {
-        return Optional.ofNullable(redisRepository.get(uuid));
     }
 
     private static void mappingValidation(Endpoint endpoint) {
