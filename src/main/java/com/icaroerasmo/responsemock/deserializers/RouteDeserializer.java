@@ -59,7 +59,7 @@ public class RouteDeserializer extends StdDeserializer<Endpoint.Route> {
             route.setHeaders(new ObjectMapper().convertValue(headersNode, Map.class));
         }
         if(Optional.ofNullable(statusNode).isPresent()) {
-            route.setStatus(parametersUtil.parseStatusFromName(statusNode.asText()));
+            route.setStatus(parametersUtil.parseStatus(statusNode.asText()));
         }
         if(Optional.ofNullable(methodNode).isPresent()) {
             route.setMethod(parametersUtil.httpMethodParser(methodNode.asText()));

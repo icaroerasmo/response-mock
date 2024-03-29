@@ -24,10 +24,14 @@ public class ParametersUtil {
                 map(h -> h.split("=")).collect(Collectors.toMap(e -> e[0], e -> e[1]));
     }
 
-    public HttpStatus parseStatusFromName(String httpStatus) {
+    public HttpStatus parseStatus(String httpStatus) {
         HttpStatus status;
         try {
-            status = HttpStatus.valueOf(httpStatus);
+            if(httpStatus.matches("[0-9]{3}")) {
+                status = HttpStatus.valueOf(Integer.parseInt(httpStatus));
+            } else {
+                status = HttpStatus.valueOf(httpStatus);
+            }
         } catch (IllegalArgumentException e) {
             final String message = "Invalid HTTP status: %s".formatted(httpStatus);
             log.error(message);
