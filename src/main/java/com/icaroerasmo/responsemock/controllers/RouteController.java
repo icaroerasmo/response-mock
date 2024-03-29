@@ -17,6 +17,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/rt")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000", "https://mock.icaroerasmo.com"})
 public class RouteController {
 
     private final RouteService routeService;
