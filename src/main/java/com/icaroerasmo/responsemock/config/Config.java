@@ -24,20 +24,6 @@ public class Config {
         return template;
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf((csrf) -> csrf.disable())
-//                .cors(cors -> {
-//                    cors.configurationSource(corsConfigurationSource());
-//                })
-//                .authorizeHttpRequests((auth) -> auth
-//                        .anyRequest()
-//                        .permitAll()
-//                );
-//        return http.build();
-//    }
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -47,17 +33,4 @@ public class Config {
             }
         };
     }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*");
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.setAllowCredentials(false);
-//        UrlBasedCorsConfigurationSource source = new
-//                UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }
