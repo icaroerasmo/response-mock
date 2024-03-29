@@ -43,7 +43,7 @@ public class Config {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/").allowedOrigins("http://localhost:3000", "https://mock.icaroerasmo.com");
+                registry.addMapping("/rt").allowedOrigins("http://localhost:3000", "https://mock.icaroerasmo.com");
             }
         };
     }
