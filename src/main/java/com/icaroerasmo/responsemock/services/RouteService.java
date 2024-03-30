@@ -81,7 +81,7 @@ public class RouteService {
         final HttpMethod httpMethod = parametersUtil.httpMethodParser(httpServletRequest.getMethod());
         final Endpoint.Route route = foundEndpoint.getRoutes().stream().
                 filter(r -> r.getMethod().equals(httpMethod)).
-                findAny().orElseThrow(() -> new RuntimeException("Route not found"));
+                findAny().orElseThrow(() -> new MockResponseException("There's no route configured for method %s".formatted(httpMethod)));
 
         responseGeneratorService.generateResponse(uuid, route.getHeaders(), route.getStatus(), route.getProduces(), route.getDelay(), route.getBody(), httpServletResponse);
 
