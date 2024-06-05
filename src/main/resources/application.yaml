@@ -5,6 +5,3 @@ spring:
       host: localhost
       port: 6379
       password: testPass123!
-response-mock:
-  cron:
-    cache: 0 0 * * * *
